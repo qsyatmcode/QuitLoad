@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="QuitLoad.MainPage">
+
+	<ScrollView BackgroundColor="#131426">
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <!--<Image
+                Source="dotnet_bot.png"
+                SemanticProperties.Description="Cute dot net bot waving hi to you!"
+                HeightRequest="200"
+                HorizontalOptions="Center" />
+            
+            <Label
+                x:Name="label"
+                Text="Hello, World!"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Welcome to .NET Multi-platform App UI"
+                SemanticProperties.HeadingLevel="Level2"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
+                FontSize="18"
+                HorizontalOptions="Center" />-->
+
+			<HorizontalStackLayout Spacing="5" HorizontalOptions="Fill" VerticalOptions="Start">
+				<Frame BorderColor="#168C61" Padding="3" BackgroundColor="Black" WidthRequest="235">
+					<Entry
+					BackgroundColor="Black"
+					TextColor="White"
+					MinimumWidthRequest="200"
+					MaximumWidthRequest="230"
+					Placeholder="Ссылка на видео"/>
+				</Frame>
+				<Button
+					BackgroundColor="#131426"
+					BorderColor="#168C61"
+					BorderWidth="1"
+					TextColor="White"
+					Text="Искать.."/>
+			</HorizontalStackLayout>
+
+			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
+				<VerticalStackLayout Spacing="5">
+					<Image Source="Resources/Images/grid.png"/>
+					<Label
+					Text="Блендер для чайников 1 серия урок онлайн бесплатно"
+					FontSize="Title"/>
+					<Label
+					Text="Опсание видео ролика описание видео ролика описание видео ролика"
+					TextColor="LightGrey"
+					FontSize="Micro"/>
+				</VerticalStackLayout>
+			</Frame>
+
+		</VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
