@@ -49,8 +49,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="VideoLibrary" Version="3.2.2" />
 	  <PackageReference Include="VkNet" Version="1.71.0" />
+	  <PackageReference Include="YoutubeExplode" Version="6.2.2" />
+	  <PackageReference Include="YoutubeExplode.Converter" Version="6.2.2" />
 	</ItemGroup>
 
 </Project>
