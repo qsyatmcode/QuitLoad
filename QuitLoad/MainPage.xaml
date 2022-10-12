@@ -3,10 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="QuitLoad.MainPage">
 
-	<ScrollView BackgroundColor="#131426">
-        <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
+	<ScrollView BackgroundColor="#12131a">
+		<ScrollView.Background>
+			<LinearGradientBrush EndPoint="0, 1">
+				
+			</LinearGradientBrush>
+		</ScrollView.Background>
+		<VerticalStackLayout
+            Spacing="15"
+            Padding="15,0"
             VerticalOptions="Center">
 
             <!--<Image
@@ -29,7 +34,7 @@
                 FontSize="18"
                 HorizontalOptions="Center" />-->
 
-			<HorizontalStackLayout Spacing="5" HorizontalOptions="Fill" VerticalOptions="Start">
+			<!--<HorizontalStackLayout Spacing="5" HorizontalOptions="Fill">
 				<Frame BorderColor="#168C61" Padding="3" BackgroundColor="Black" WidthRequest="235">
 					<Entry
 					BackgroundColor="Black"
@@ -39,23 +44,101 @@
 					Placeholder="Ссылка на видео"/>
 				</Frame>
 				<Button
+					Clicked="OnCounterClicked"
 					BackgroundColor="#131426"
 					BorderColor="#168C61"
 					BorderWidth="1"
 					TextColor="White"
 					Text="Искать.."/>
-			</HorizontalStackLayout>
+			</HorizontalStackLayout>-->
+			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
+				<HorizontalStackLayout Spacing="10">
+					<Image Source="Resources/Images/testavatar.png"
+						   HeightRequest="40"/>
+					<Label Text="Дима Щербаков"
+						   VerticalTextAlignment="Center"/>
+					<Button Text="Sign-out" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81"/>
+				</HorizontalStackLayout>
+			</Frame>
+			
+			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
+				<HorizontalStackLayout>
+					<Entry Completed="OnEditorCompleted"
+					   x:Name="searchEditor"
+						   Text="https://www.youtube.com/watch?v=yJo"
+						   MinimumWidthRequest="200"
+						   MaximumWidthRequest="255"/>
+					<Button
+						Text="Search.."
+						TextColor="#15BF81"
+						BackgroundColor="#15161C"
+						Clicked="OnSearchClicked"/>
+				</HorizontalStackLayout>
+			</Frame>
 
 			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
 				<VerticalStackLayout Spacing="5">
-					<Image Source="Resources/Images/grid.png"/>
+					<Image Source="Resources/Images/testviedopreview.webp"/>
+					<Label Text="11 min 23 sec - Uploaded: 11th of October - 1,5 million views"
+						   FontSize="Micro"
+						   TextColor="#585859"/>
 					<Label
-					Text="Блендер для чайников 1 серия урок онлайн бесплатно"
+						x:Name="videoTitle"
+					Text="СТРАХ АТАКУЕТ! — ТОПЛЕС"
 					FontSize="Title"/>
 					<Label
-					Text="Опсание видео ролика описание видео ролика описание видео ролика"
+					Text="Забирай 2 дня правильного питания от Grow Food в Москве и Питере за 990 рублей по промокоду ТОПЛЕС: https://clck.ru/yTxMZ 
+
+Скидка 1000 рублей в приложении ЛЭТУАЛЬ по промокоду ТОПЛЕС. Там есть совершенно все для красоты и здоровья: https://bit.ly/toples_letual 
+
+Купить Мерч или поддержать команду Топлес: 
+https://taplink.cc/toples
+
+Рассказы о смешных и нелепых фобиях развлекают нас, но их «счастливым» обладателям совсем не до шуток. Многие из вас тоже страдают от фобий, и в этом выпуске мы расскажем, как зарождается страх в нашей голове, как он помогает нам выжить и почему иногда работает против человека. Вы узнаете, почему люди боятся клоунов и разных безобидных вещей, можно ли вылечить страх с помощью страха и что пугает каждого человека на планете.
+↓↓↓
+
+НАЙТИ  НА НАС В СОЦСЕТЯХ:
+TELEGRAM 🔥  https://t.me/toplesofficial
+IG ► https://www.instagram.com/yan_lapotkov/ 
+ЯНДЕКС.ДЗЕН ► https://zen.yandex.ru/toplesofficial
+TIK-TOK ► https://vm.tiktok.com/ZSJoPNSRk/
+Я В VK ► https://vk.com/yanlapotkov
+ГРУППА VK ► https://vk.com/toples_show 
+↓↓↓
+
+Смотрите больше видео:
+КОСМОС ► https://goo.gl/uCkfD3
+ТЕХНОЛОГИИ ► https://goo.gl/vLdH2H
+ИГРЫ ► https://goo.gl/17LhoN
+КИНО ► https://goo.gl/ZUgWGD
+VLOG ► https://goo.gl/z88cuS
+СТРАХ ► https://goo.gl/b6fu5K
+ЖИВОТНЫЕ ► https://goo.gl/jn93tz
+ОЧЕНЬ ИНТЕРЕСНЫЕ ► https://goo.gl/Prcrtj
+↓↓↓
+
+Источники: https://bit.ly/toples_phobia 
+
+Над выпуском работали:
+Ян Лапотков 
+Михаил Мартынов
+Вадим Куликов
+Катя Адаричева
+Тёма Левин
+Александр Щербак
+Андрей Алексин
+Анастасия Корабельникова
+Павел Жданов
+Роман Катышкин 
+Александр Репецкий
+Уровень Бог
+Opsi
+Илья Алейников
+Арсений Ткачёв
+Аркадий Афанасьев
+Ленар Абдрахманов"
 					TextColor="LightGrey"
-					FontSize="Micro"/>
+					FontSize="Small"/>
 				</VerticalStackLayout>
 			</Frame>
 

@@ -4,10 +4,12 @@ namespace ApiShells
 {
 	public class YTapi
 	{
-		private static YouTube _client = new YouTube();
+		private YouTube _client = new YouTube();
 
-		static public VideoInfo GetVideoInfo(string url)
+		public VideoInfo GetVideoInfo(string url)
 		{
+			if (url == null || url == "" || url == String.Empty) throw new ArgumentNullException("Nullable url");
+
 			YouTubeVideo video = _client.GetVideo(url);
 
 			return video.Info;

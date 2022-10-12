@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Reflection.Metadata;
+using System.Security.Cryptography;
 using ApiShells;
 using VkNet;
 
@@ -6,7 +7,7 @@ namespace QuitLoad;
 
 public partial class MainPage : ContentPage
 {
-	private VKapi _vkApi;
+	private VKapi _vkApi; // Нужна инициализация
 	private YTapi _ytapi;
 
 	int count = 0;
@@ -16,17 +17,14 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
-	private async void OnCounterClicked(object sender, EventArgs e)
+	private void OnEditorCompleted()
 	{
-		//count++;
+		videoTitle.Text = searchEditor.Text;
+	}
 
-		//if (count == 1)
-		//	CounterBtn.Text = $"Clicked {count} time";
-		//else
-		//	CounterBtn.Text = $"Clicked {count} times";
-
-		//SemanticScreenReader.Announce(CounterBtn.Text);
-		
+	private void OnSearchClicked(object sender, EventArgs e)
+	{
+		videoTitle.Text = searchEditor.Text;
 	}
 
 	private void OnEditorCompleted(object sender, EventArgs e)
