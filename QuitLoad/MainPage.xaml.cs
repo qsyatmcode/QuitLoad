@@ -1,12 +1,13 @@
 ﻿using System.Security.Cryptography;
-using VKdnldapi;
+using ApiShells;
 using VkNet;
 
 namespace QuitLoad;
 
 public partial class MainPage : ContentPage
 {
-	private VKapiShell vkApi;
+	private VKapi _vkApi;
+	private YTapi _ytapi;
 
 	int count = 0;
 
@@ -25,6 +26,7 @@ public partial class MainPage : ContentPage
 		//	CounterBtn.Text = $"Clicked {count} times";
 
 		//SemanticScreenReader.Announce(CounterBtn.Text);
+		
 	}
 
 	private void OnEditorCompleted(object sender, EventArgs e)
