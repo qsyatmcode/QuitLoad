@@ -94,7 +94,7 @@
 						   BackgroundColor="#1d1e24"
 						   Padding="10"
 						   FontSize="12"/>
-					<Label Text="720p" FontSize="15"/>
+					<Label Text="720p" FontSize="15" x:Name="serviceLabel"/>
 					<Label x:Name="savePathLabel" FontSize="10"/>
 					<Button
 						Text="Download" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81"/>
