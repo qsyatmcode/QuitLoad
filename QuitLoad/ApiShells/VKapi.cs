@@ -2,18 +2,36 @@
 using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Model;
+using VkNet.Model.Attachments;
 
 namespace ApiShells
 {
 	public class VKapi
 	{
 		private static VkApi api = new VkApi();
+		public static VkNet.Model.Attachments.Video Save;
 
 		public VKapi(string accesToken)
 		{
-			api.Authorize(new ApiAuthParams
+			if (accesToken != String.Empty)
 			{
-				AccessToken = accesToken
+				api.Authorize(new ApiAuthParams
+				{
+					AccessToken = accesToken
+				});
+			}
+		}
+
+		public User GetInfo()
+		{
+			return api.Users.Get(Array.Empty<long>()).First();
+		}
+
+		public void CreateServer()
+		{
+			Save = api.Video.Save(new VkNet.Model.RequestParams.VideoSaveParams
+			{
+				""
 			});
 		}
 

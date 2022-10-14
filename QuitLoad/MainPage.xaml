@@ -13,58 +13,21 @@
             Spacing="15"
             Padding="15,0"
             VerticalOptions="Center">
-
-            <!--<Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-            
-            <Label
-                x:Name="label"
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
-
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />-->
-
-			<!--<HorizontalStackLayout Spacing="5" HorizontalOptions="Fill">
-				<Frame BorderColor="#168C61" Padding="3" BackgroundColor="Black" WidthRequest="235">
-					<Entry
-					BackgroundColor="Black"
-					TextColor="White"
-					MinimumWidthRequest="200"
-					MaximumWidthRequest="230"
-					Placeholder="Ссылка на видео"/>
-				</Frame>
-				<Button
-					Clicked="OnCounterClicked"
-					BackgroundColor="#131426"
-					BorderColor="#168C61"
-					BorderWidth="1"
-					TextColor="White"
-					Text="Искать.."/>
-			</HorizontalStackLayout>-->
+			
 			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
 				<HorizontalStackLayout Spacing="10">
-					<Image Source="Resources/Images/testavatar.png"
-						   HeightRequest="40"/>
+					<Image 
+						   x:Name="avatarImage"/>
 					<Label Text="Дима Щербаков"
-						   VerticalTextAlignment="Center"/>
-					<Button Text="Sign-out" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81"/>
+						   VerticalTextAlignment="Center"
+						   x:Name="accountName"/>
+					<Button Text="Sign-out" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81" x:Name="logginButton" Clicked="OnLoginButtonClick"/>
 				</HorizontalStackLayout>
 			</Frame>
 			
 			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
 				<HorizontalStackLayout>
-					<Entry Completed="OnEditorCompleted"
-					   x:Name="searchEditor"
+					<Entry x:Name="searchEditor"
 						   Text="https://www.youtube.com/watch?v=yJo"
 						   MinimumWidthRequest="200"
 						   MaximumWidthRequest="255"/>

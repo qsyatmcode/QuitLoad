@@ -15,7 +15,7 @@
 		<ApplicationTitle>QuitLoad</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.quitload</ApplicationId>
+		<ApplicationId>com.qsyatmcode.quitload</ApplicationId>
 		<ApplicationIdGuid>ABFF0078-2F0A-43AC-A7E1-6E52900EBCA8</ApplicationIdGuid>
 
 		<!-- Versions -->
