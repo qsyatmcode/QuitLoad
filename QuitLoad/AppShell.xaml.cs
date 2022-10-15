@@ -8,6 +8,6 @@ public partial class AppShell : Shell
 	{
 		InitializeComponent();
 
-		shellContent.Title = "QuitLoad v" + Assembly.GetEntryAssembly().GetName().Version.Major.ToString() + '.' + Assembly.GetExecutingAssembly().GetName().Version.Minor;
+		//shellContent.Title = "QuitLoad v" + Assembly.GetEntryAssembly().GetName().Version.Major.ToString() + '.' + Assembly.GetExecutingAssembly().GetName().Version.Minor;
 	}
 }

@@ -14,7 +14,7 @@
             Padding="15,0"
             VerticalOptions="Center">
 			
-			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
+			<!--<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
 				<HorizontalStackLayout Spacing="10">
 					<Image 
 						   x:Name="avatarImage"/>
@@ -23,12 +23,12 @@
 						   x:Name="accountName"/>
 					<Button Text="Sign-out" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81" x:Name="logginButton" Clicked="OnLoginButtonClick"/>
 				</HorizontalStackLayout>
-			</Frame>
+			</Frame>-->
 			
 			<Frame BackgroundColor="#15161C" BorderColor="#15BF81">
 				<HorizontalStackLayout>
 					<Entry x:Name="searchEditor"
-						   Text="https://www.youtube.com/watch?v=yJo"
+						   Placeholder="Link to video"
 						   MinimumWidthRequest="200"
 						   MaximumWidthRequest="255"/>
 					<Button
@@ -49,7 +49,7 @@
 						   x:Name="videoInfo"/>
 					<Label
 						x:Name="videoTitle"
-					Text="СТРАХ АТАКУЕТ! — ТОПЛЕС"
+					Text="VIDEO TITLE"
 					FontSize="Title"/>
 					<Label Text=""
 						   x:Name="videoDescription"
@@ -60,7 +60,7 @@
 					<Label Text="720p" FontSize="15" x:Name="serviceLabel"/>
 					<Label x:Name="savePathLabel" FontSize="10"/>
 					<Button
-						Text="Download" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81"/>
+						Text="Download" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81" Clicked="OnDownloadButtonClicked"/>
 				</VerticalStackLayout>
 			</Frame>
 

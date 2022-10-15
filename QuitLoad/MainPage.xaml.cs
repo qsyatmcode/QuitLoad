@@ -1,19 +1,19 @@
-﻿using ApiShells;
-using YoutubeExplode;
+﻿using YoutubeExplode;
 using Microsoft.Maui.Storage;
 using VkNet;
+using YoutubeExplode.Videos.Streams;
+using YoutubeExplode.Converter;
+using System.Security.Cryptography;
+
 namespace QuitLoad;
 
 public partial class MainPage : ContentPage
 {
-	private VKapi _vkApi;
 	private static YoutubeClient s_youtube;
 
-	public static string savePath { get; private set; } // ВОТ ТУТ ВАЖНО
+	private static string s_savePath = Microsoft.Maui.Storage.FileSystem.Current.AppDataDirectory;
 	public static string dataPath { get; private set; } = FileSystem.AppDataDirectory;
-	private string _accessToken = string.Empty;
-
-	private bool _isLogged = false;
+	private static YoutubeExplode.Videos.Video s_selectedYTvideo;
 
 	private Service _selected;
 	
@@ -21,8 +21,7 @@ public partial class MainPage : ContentPage
 	{
 		undefined = -1,
 		vk,
-		youtube,
-		pornhub
+		youtube
 	}
 
 	public MainPage()
@@ -31,116 +30,20 @@ public partial class MainPage : ContentPage
 		s_youtube = new YoutubeClient();
 		//_vkApi = new VKapi(""); // AccesToken надо хранить в каком-то файле чтобы при выходе сохранялся и входе загружался
 		_selected = new Service();
-		if (!_isLogged)
+
+		if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
 		{
-			avatarImage.IsVisible = false;
-			accountName.IsVisible = false;
-			logginButton.Text = "Log-in";
-		}
-		else
-		{
-			avatarImage.IsVisible = true;
-			accountName.IsVisible = true;
-			logginButton.Text = "Log-out";
+			s_savePath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
 		}
 
-		savePathLabel.Text = savePath;
+		savePathLabel.Text = s_savePath;
 		videoFrame.IsVisible = false;
-	}
-
-	private async void ReadLastLogin()
-	{
-		if (File.Exists(dataPath + "at.txt"))
-		{
-			try
-			{
-				using (var streamReader = new StreamReader(dataPath + "at.txt"))
-				{
-					_accessToken = streamReader.ReadToEnd();
-				}
-				login();
-			}
-			catch
-			{
-				await DisplayAlert("Ошибка", "Не удалось войти в аккаунт", "OK");
-			}
-		}
-	}
-	private async void WriteLogin()
-	{
-		try
-		{
-			using (var streamWriter = new StreamWriter(dataPath + "at.txt", false)) //отказано в доступе
-			{
-				await streamWriter.WriteLineAsync(_accessToken);
-			}
-		}
-		catch
-		{
-			await DisplayAlert("Ошибка", "Не удалось сохранить AccessToken", "OK");
-		}
-	}
-	private async void login()
-	{
-		if(_accessToken == String.Empty)
-		{
-			await DisplayAlert("Вход", "Не удалось выполнить вход. Возможно вы ввели неверный AccessToken", "OK");
-			return;
-		}
-		_vkApi = new VKapi(_accessToken);
-		_isLogged = true;
-		var info = _vkApi.GetInfo();
-
-		avatarImage.Source = info.Photo100;
-		accountName.Text = info.FirstName + '-' + info.LastName;
-
-	}
-	private async void OnLoginButtonClick(object sender, EventArgs e)
-	{
-		if (!_isLogged) //log-in
-		{
-			bool result = await DisplayAlert("Вход", "Вам необходимо получить свой AccessToken, вы хотите открыть открыть страницу для его получения?", "Да", "Нет, у меня он уже есть");
-			if (result)
-			{
-				try
-				{
-					Uri uri = new Uri("https://vkhost.github.io/");
-					await Browser.OpenAsync(uri, BrowserLaunchMode.SystemPreferred);
-				}
-				catch
-				{
-					await DisplayAlert("Ошибка", "Не удалось открыть браузер", "OK");
-				}
-			}
-			else
-			{
-				_accessToken = await DisplayPromptAsync("Вход", "Введите свой AccessToken");
-				login();
-				WriteLogin();
-
-				avatarImage.IsVisible = true;
-				logginButton.Text = "Log-out";
-				accountName.IsVisible = true;
-
-				return;
-			}
-		}
-		else //log-out
-		{
-			bool result = await DisplayAlert("Выход", "Вы действительно хотите выйти?", "Да", "Нет");
-			if (result)
-			{
-				_isLogged = false;
-
-				avatarImage.IsVisible = false;
-				logginButton.Text = "Log-in";
-				accountName.IsVisible = false;
-			}
-		}
 	}
 
 	private async void OnSearchClicked(object sender, EventArgs e) // Нужно написать систему сервисов чтобы ифы не писать
 	{
+		HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+
 		ServiceDefinition();
 
 		if (_selected != Service.undefined)
@@ -149,19 +52,10 @@ public partial class MainPage : ContentPage
 
 			if(_selected == Service.vk)
 			{
-				if (!_isLogged)
-				{
-					await DisplayAlert("Ошибка", "Для того чтобы скачивать видео с сервиса ВКонтакте, нужно войти в аккаунт", "OK");
-				}
-				else
-				{
-					//действия TODO TODO TODO TODO TODO TODO TODO TODO TODO
-					videoFrame.IsVisible = true;
-				}
 
 			}else if (_selected == Service.youtube)
 			{
-
+				YTSearch();
 			}
 		}
 		else
@@ -169,6 +63,12 @@ public partial class MainPage : ContentPage
 			videoFrame.IsVisible = false;
 			await DisplayAlert("Ошибка", "Не удалось определить сервис", "OK");
 		}
+	}
+
+	private async void OnDownloadButtonClicked(object sender, EventArgs e)
+	{
+		HapticFeedback.Default.Perform(HapticFeedbackType.Click);
+		Download();
 	}
 
 	private void OnEditorCompleted(object sender, EventArgs e)
@@ -198,6 +98,7 @@ public partial class MainPage : ContentPage
 
 	private async void YTSearch()
 	{
+		videoFrame.IsVisible = false;
 		try
 		{
 			var video = await s_youtube.Videos.GetAsync(searchEditor.Text);
@@ -207,25 +108,84 @@ public partial class MainPage : ContentPage
 			videoDescription.Text = video.Description;
 			var thumbnail = video.Thumbnails[0];
 			videoImage.Source = thumbnail.Url;
-
-			videoFrame.IsVisible = true;
+			s_selectedYTvideo = video;
+			HapticFeedback.Default.Perform(HapticFeedbackType.Click);
 		}
 		catch
 		{
 			await DisplayAlert("Ошибка", "Не удалось получить информацию о видео", "OK");
+			return;
+		}
+		videoFrame.IsVisible = true;
+	}
+	private async void Download()
+	{
+		if (_selected == Service.youtube) {
+			////Streams and manifest definition
+			//StreamManifest streamManifest;
+			//IStreamInfo audioStreamInfo;
+			//IVideoStreamInfo videoStreamInfo;
+			//IStreamInfo[] streamInfos;
+			//try
+			//{
+			//	//Streams and manifest initialization
+			var	streamManifest = await s_youtube.Videos.Streams.GetManifestAsync(s_selectedYTvideo.Id);
+
+			//	audioStreamInfo = streamManifest.GetAudioStreams().GetWithHighestBitrate();
+			//	videoStreamInfo = streamManifest.GetVideoStreams().GetWithHighestVideoQuality();
+			//	streamInfos = new IStreamInfo[] { audioStreamInfo, videoStreamInfo };
+			//}
+			//catch
+			//{
+			//	await DisplayAlert("Ошибка", "Не удалось инициализировать потоки и/или манифест", "OK");
+			//	return;
+			//}
+			//string size = (streamInfos[0].Size.MegaBytes + streamInfos[1].Size.MegaBytes).ToString().Split(',')[0];
+
+			IStreamInfo streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+			//var stream = await s_youtube.Videos.Streams.GetAsync(streamInfo);
+			bool result = await DisplayAlert("Download", $"Размер файла составит {streamInfo.Size} Mb ({streamManifest.GetMuxedStreams().GetWithHighestVideoQuality().VideoQuality.ToString()}), вы хотите продолжить?" + Environment.NewLine + "По пути: " + s_savePath + "\\" + GenerateSavename() + ".mp4", "Да", "Нет");
+			if (result)
+			{
+				//try
+				//{
+				//await s_youtube.Videos.DownloadAsync(streamInfo, new ConversionRequestBuilder(s_savePath + $"\\{GenerateSavename()}" + ".mp4").Build());
+				await s_youtube.Videos.Streams.DownloadAsync(streamInfo, s_savePath + $"\\{GenerateSavename()}" + "." + streamInfo.Container);
+
+				await DisplayAlert("Download", "Скачивание завершено!", "OK");
+				//}
+				//catch
+				//{
+				//	await DisplayAlert("Ошибка", "Не удалось скачать видео", "OK");
+				//	return;
+				//}
+			}
+			else
+			{
+				return;
+			}
+		}else if (_selected == Service.vk) // TODO
+		{
+
 		}
 	}
 
-	private async void VKlogin()
+	private static string GenerateSavename()
 	{
-		try
+		string output = String.Empty;
+		int seed = 0;
+		using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
 		{
-
+			var buffer = new byte[4];
+			rng.GetBytes(buffer);
+			seed = BitConverter.ToInt32(buffer, 0);
 		}
-		catch
+		Random rnd = new Random(seed);
+		for (int i = 0; i <= 12; i++)
 		{
-			await DisplayAlert("Ошибка", "Не удалось войти в аккаунт", "OK");
+			output += Convert.ToString(rnd.Next());
 		}
+		return output.Substring(output.Length - 12);
 	}
 }
 
