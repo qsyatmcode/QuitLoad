@@ -61,6 +61,7 @@
 					<Label x:Name="savePathLabel" FontSize="10"/>
 					<Button
 						Text="Download" BackgroundColor="#15161C" BorderColor="#15BF81" BorderWidth="1" TextColor="#15BF81" Clicked="OnDownloadButtonClicked"/>
+					<ProgressBar Progress="0" x:Name="progressBar"/>
 				</VerticalStackLayout>
 			</Frame>
 

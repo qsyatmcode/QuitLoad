@@ -11,9 +11,9 @@ public partial class MainPage : ContentPage
 {
 	private static YoutubeClient s_youtube;
 
-	private static string s_savePath = Microsoft.Maui.Storage.FileSystem.Current.AppDataDirectory;
-	public static string dataPath { get; private set; } = FileSystem.AppDataDirectory;
-	private static YoutubeExplode.Videos.Video s_selectedYTvideo;
+	private static string s_savePath =  FileSystem.Current.AppDataDirectory;
+	private YoutubeExplode.Videos.Video _selectedYTvideo;
+	private double _downloadProgress = 0d;
 
 	private Service _selected;
 	
@@ -33,11 +33,12 @@ public partial class MainPage : ContentPage
 
 		if (DeviceInfo.Current.Platform == DevicePlatform.WinUI)
 		{
-			s_savePath = Environment.GetFolderPath(Environment.SpecialFolder.MyVideos);
+			s_savePath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyVideos);
 		}
 
 		savePathLabel.Text = s_savePath;
 		videoFrame.IsVisible = false;
+		progressBar.IsVisible = false;
 	}
 
 	private async void OnSearchClicked(object sender, EventArgs e) // Нужно написать систему сервисов чтобы ифы не писать
@@ -68,7 +69,7 @@ public partial class MainPage : ContentPage
 	private async void OnDownloadButtonClicked(object sender, EventArgs e)
 	{
 		HapticFeedback.Default.Perform(HapticFeedbackType.Click);
-		Download();
+		await Download();
 	}
 
 	private void OnEditorCompleted(object sender, EventArgs e)
@@ -108,7 +109,7 @@ public partial class MainPage : ContentPage
 			videoDescription.Text = video.Description;
 			var thumbnail = video.Thumbnails[0];
 			videoImage.Source = thumbnail.Url;
-			s_selectedYTvideo = video;
+			_selectedYTvideo = video;
 			HapticFeedback.Default.Perform(HapticFeedbackType.Click);
 		}
 		catch
@@ -118,47 +119,27 @@ public partial class MainPage : ContentPage
 		}
 		videoFrame.IsVisible = true;
 	}
-	private async void Download()
+
+	private async Task Download()
 	{
 		if (_selected == Service.youtube) {
-			////Streams and manifest definition
-			//StreamManifest streamManifest;
-			//IStreamInfo audioStreamInfo;
-			//IVideoStreamInfo videoStreamInfo;
-			//IStreamInfo[] streamInfos;
-			//try
-			//{
-			//	//Streams and manifest initialization
-			var	streamManifest = await s_youtube.Videos.Streams.GetManifestAsync(s_selectedYTvideo.Id);
-
-			//	audioStreamInfo = streamManifest.GetAudioStreams().GetWithHighestBitrate();
-			//	videoStreamInfo = streamManifest.GetVideoStreams().GetWithHighestVideoQuality();
-			//	streamInfos = new IStreamInfo[] { audioStreamInfo, videoStreamInfo };
-			//}
-			//catch
-			//{
-			//	await DisplayAlert("Ошибка", "Не удалось инициализировать потоки и/или манифест", "OK");
-			//	return;
-			//}
-			//string size = (streamInfos[0].Size.MegaBytes + streamInfos[1].Size.MegaBytes).ToString().Split(',')[0];
+			var	streamManifest = await s_youtube.Videos.Streams.GetManifestAsync(_selectedYTvideo.Id);
 
 			IStreamInfo streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
 			//var stream = await s_youtube.Videos.Streams.GetAsync(streamInfo);
-			bool result = await DisplayAlert("Download", $"Размер файла составит {streamInfo.Size} Mb ({streamManifest.GetMuxedStreams().GetWithHighestVideoQuality().VideoQuality.ToString()}), вы хотите продолжить?" + Environment.NewLine + "По пути: " + s_savePath + "\\" + GenerateSavename() + ".mp4", "Да", "Нет");
+
+			bool result = await DisplayAlert("Download", $"Размер файла составит {streamInfo.Size} Mb ({streamManifest.GetMuxedStreams().GetWithHighestVideoQuality().VideoQuality.ToString()}), вы хотите продолжить?" + System.Environment.NewLine + "По пути: " + s_savePath + "\\" + GenerateSavename() + ".mp4", "Да", "Нет");
 			if (result)
 			{
-				//try
-				//{
-				//await s_youtube.Videos.DownloadAsync(streamInfo, new ConversionRequestBuilder(s_savePath + $"\\{GenerateSavename()}" + ".mp4").Build());
-				await s_youtube.Videos.Streams.DownloadAsync(streamInfo, s_savePath + $"\\{GenerateSavename()}" + "." + streamInfo.Container);
+				progressBar.IsVisible = true;
+				Progress<double> progress = new Progress<double>(p => _downloadProgress = p);
+				progress.ProgressChanged += Progress_ProgressChanged;
+				
+				await s_youtube.Videos.Streams.DownloadAsync(streamInfo, s_savePath + $"\\{GenerateSavename()}" + "." + streamInfo.Container, progress);
 
+				progressBar.IsVisible = false;
+				_downloadProgress = 0d;
 				await DisplayAlert("Download", "Скачивание завершено!", "OK");
-				//}
-				//catch
-				//{
-				//	await DisplayAlert("Ошибка", "Не удалось скачать видео", "OK");
-				//	return;
-				//}
 			}
 			else
 			{
@@ -168,6 +149,11 @@ public partial class MainPage : ContentPage
 		{
 
 		}
+	}
+
+	private void Progress_ProgressChanged(object sender, double e)
+	{
+		progressBar.ProgressTo(e - progressBar.Progress, 500, Easing.Linear);
 	}
 
 	private static string GenerateSavename()
